@@ -1,6 +1,12 @@
 import urwid
 
 
+# hack so we can use ctrl s, ctrl q and ctrl c
+ui = urwid.raw_display.RealTerminal()
+ui.tty_signal_keys('undefined', 'undefined', 'undefined', 'undefined',
+'undefined')
+
+
 class WidgetHandler():
     palette = [('header', 'white', 'black'),
                ('reveal focus', 'dark cyan', 'black'),
@@ -8,6 +14,7 @@ class WidgetHandler():
 
     def __init__(self, file):
         self.items = []
+        self.views = {}
 
         self.code_view = urwid.Edit(edit_text=file, multiline=True)
 
@@ -22,25 +29,47 @@ class WidgetHandler():
 
         self.frame = urwid.Frame(self.listbox)
 
-    def input_filter(self, input, raw):
+
+    def input(self, input, raw):
         return input
 
 
     def input_unhandled(self, input):
-        pass
+        if input == "ctrl v":
+            self.add_ast_view()
+        if input in ("ctrl v", "ctrl c"):
+            raise urwid.ExitMainLoop()
 
 
     def start(self):
         loop = urwid.MainLoop(self.frame, self.palette,
-                              input_filter=self.input_filter,
-                              unhandled_input=self.input_unhandled)
+                              input_filter=self.input,
+                              unhandled_input=self.input_unhandled,
+                              pop_ups=True)
         loop.run()
+
 
     def insert_view(self, view):
         self.div = urwid.Divider(div_char="-")
 
-        self.items.append(div)
-        self.items.append(urwid.AttrMap(view, None, 'reveal focus'))
+        self.content.append(self.div)
+        self.content.append(urwid.AttrMap(view, None, 'reveal focus'))
 
+
+    def add_ast_view(self, name=None):
+        if "ast" in self.views.keys():
+            return
+        view = urwid.Text("ast view")
+        self.insert_view(view)
+        self.views["ast"] = view
+
+
+    def add_code_view(self, name=None):
+        view = urwid.Text("code view")
+        self.views["code"] = view
+
+
+    def get_view(self, name):
+        return self.views[name]
 
 
