@@ -112,14 +112,14 @@ class WidgetHandler():
         view = self.views[name]
 
         # Wierd hack so we always get the last inserted div
-        div = list(reversed(self.divs)).pop()
+        div = self.divs.pop()
         self.content.remove((view, ("pack", None)))
         self.content.remove((div, ("pack", None)))
 
         # So we can insert the view again later on
         del self.views[name]
 
-        self.divs.remove(div)
+        #self.divs.remove(div)
 
     def get_view(self, name):
         # API stuff later on

@@ -9,7 +9,7 @@ class LineWalker(urwid.ListWalker):
         self.focus = 0
 
     def get_code(self):
-        a = self.lines[self.focus].get_text()[0] == ""
+        end_of_expr = len(self.lines)
         for n, line in enumerate(self.lines[self.focus:]):
             if line.get_text()[0] == "":
                 end_of_expr = self.focus+n
@@ -19,9 +19,7 @@ class LineWalker(urwid.ListWalker):
             if line.get_text()[0] == "":
                 start_of_expr = self.focus-n
                 break
-        ret = ""
-        for i in self.lines[start_of_expr:end_of_expr]:
-            ret += i.get_text()[0] + "\n"
+        ret = "\n".join([i.get_text()[0] for i in self.lines[start_of_expr:end_of_expr]])
         return ret
 
     def get_focus(self):
