@@ -1,8 +1,5 @@
 from hdb.layout import WidgetHandler
+import sys
 
-
-WidgetHandler("self").start()
-
-
-
+WidgetHandler(sys.argv[1]).start()
 
