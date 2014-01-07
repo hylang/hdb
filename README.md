@@ -7,8 +7,15 @@ We need Hy to run this, as well as urwid
 
 `main.py <file>`
 
-`ctrl w` to eval an expression
-`ctrl a` to view the AST
-`ctrl c` to view the code
+
+`ctrl w` to eval an expression  
+
+`ctrl a` to view the AST  
+
+`ctrl v` to view the code  
+
+`ctrl c` to exit the program  
+
+
 
 Have fun!
