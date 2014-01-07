@@ -28,16 +28,19 @@ class WidgetHandler():
         self.listbox = urwid.ListBox(self.content)
 
         self.frame = urwid.Frame(self.listbox)
-
+        self.divs = []
 
     def input(self, input, raw):
         return input
 
 
     def input_unhandled(self, input):
+        """Main input handler"""
+        if input == "ctrl a":
+            self.add_view("ast")
         if input == "ctrl v":
-            self.add_ast_view()
-        if input in ("ctrl v", "ctrl c"):
+            self.add_view("code")
+        if input in ("ctrl c"):
             raise urwid.ExitMainLoop()
 
 
@@ -51,25 +54,34 @@ class WidgetHandler():
 
     def insert_view(self, view):
         self.div = urwid.Divider(div_char="-")
-
+        self.divs.append(self.div)
         self.content.append(self.div)
-        self.content.append(urwid.AttrMap(view, None, 'reveal focus'))
+        self.content.append(view)
 
 
-    def add_ast_view(self, name=None):
-        if "ast" in self.views.keys():
+    def add_view(self, name):
+        if name in self.views.keys():
+            self.remove_view(name)
             return
-        view = urwid.Text("ast view")
+        view = urwid.Text(name + " view")
+        self.views[name] = view
         self.insert_view(view)
-        self.views["ast"] = view
 
+    def remove_view(self, name):
+        view = self.views[name]
 
-    def add_code_view(self, name=None):
-        view = urwid.Text("code view")
-        self.views["code"] = view
+        # Wierd hack so we always get the last inserted div
+        div = list(reversed(self.divs)).pop()
+        self.content.remove(view)
+        self.content.remove(div)
 
+        # So we can insert the view again later on
+        del self.views[name]
+
+        self.divs.remove(div)
 
     def get_view(self, name):
+        # API stuff later on
         return self.views[name]
 
 
