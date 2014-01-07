@@ -2,9 +2,9 @@ import urwid
 from hdb.lazyedit import LineWalker
 from hdb.codegen import codegen
 # hack so we can use ctrl s, ctrl q and ctrl c
-ui = urwid.raw_display.RealTerminal()
-ui.tty_signal_keys('undefined', 'undefined', 'undefined', 'undefined',
-'undefined')
+# ui = urwid.raw_display.RealTerminal()
+# ui.tty_signal_keys('undefined', 'undefined', 'undefined', 'undefined',
+# 'undefined')
 
 
 
